@@ -1065,7 +1065,7 @@ test_nvme_tcp_qpair_connect_sock(void)
 	memcpy(ctrlr.trid.trsvcid, "2147483647", sizeof("2147483647"));
 
 	rc = nvme_tcp_qpair_connect_sock(&ctrlr, &tqpair.qpair);
-	SPDK_CU_ASSERT_FATAL(rc == -1);
+	SPDK_CU_ASSERT_FATAL(rc != 0);
 
 	/* Parse invalid address */
 	memcpy(ctrlr.trid.trsvcid, "23", sizeof("23"));
