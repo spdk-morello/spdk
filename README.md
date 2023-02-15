@@ -1,3 +1,134 @@
+# SPDK for Arm Morello
+
+The 'morello' branch of this repository contains changes to SPDK release v23.01 to support native builds on the Arm Morello platform running CheriBSD.
+
+## Prerequisites
+
+The examples below assume the use of 'sudo' which can be installed and configured as 'root' using:
+
+~~~{.sh}
+pkg64c install sudo
+visudo
+~~~
+
+To perform a native build on CheriBSD, the following packages are required:
+
+~~~{.sh}
+sudo pkg64c install bash git libelf e2fsprogs-libuuid
+sudo pkg64 install meson ninja python llvm llvm-base py39-pip libelf gdb-cheri
+sudo pkg64 install pkgconf gmake cunit openssl e2fsprogs-libuuid ncurses
+sudo pkg64 install py39-pyelftools autoconf automake libtool help2man
+sudo pkg64 install doxygen mscgen graphviz
+pip install pyelftools
+~~~
+
+## Source Code
+
+The patched SPDK source code can be obtained using:
+~~~{.sh}
+git clone https://github.com/spdk-morello/spdk
+cd spdk
+git checkout morello
+git update submodule --init
+~~~
+
+## CheriBSD Source Code
+
+To build the DPDK kernel modules, the source for CheriBSD needs to be installed in /usr/src:
+
+~~~{.sh}
+sudo git clone https://github.com/CTSRD-CHERI/cheribsd /usr/src
+~~~
+
+With CheriBSD 22.12, kernel modules fail to build with 'is ZFSTOP set?'.
+
+As a temporary workaround, run the following after installing the source:
+
+~~~{.sh}
+echo 'ZFSTOP=${SYSDIR}/contrib/subrepo-openzfs' | sudo tee -a /usr/share/mk/bsd.sysdir.mk
+~~~
+
+## Kernel Modules
+
+DPDK kernel modules are required to manage the allocation of physically contiguous memory and for direct access to PCI devices.
+
+Note that the modules need to match the type of kernel that is running (hybrid or purecap), which may be different to the type of the required SPDK libraries.
+
+The modules can be installed in /boot/modules using:
+
+~~~{.sh}
+sudo cp XXXX   <build-path>/kernel/freebsd/*.ko /boot/modules
+sudo kldxref /boot/modules
+~~~
+
+The kernel modules need to be loaded with:
+
+~~~{.sh}
+sudo kldload contigmem nic_uio
+~~~
+
+To load them automatically after every boot, add the following line to /etc/rc.conf:
+
+~~~{.sh}
+kld_list="contigmem nic_uio"
+~~~
+
+## Hybrid Build
+
+To create a hybrid build:
+
+~~~{.sh}
+CC=clang CXX=clang ./configure --target-arch=armv8-a
+gmake -j4
+~~~
+
+For a hybrid debug build:
+
+~~~{.sh}
+CC=clang CXX=clang ./configure --target-arch=armv8-a --debug
+gmake -j4
+~~~
+
+## PureCap Build
+
+The purecap build produces multiple errors, especially related to increased structure sizes due to the increased size of a pointer.
+
+To create a purecap build:
+
+~~~{.sh}
+./configure --target-arch=morello
+gmake -j4
+~~~
+
+For a purecap debug build:
+
+~~~{.sh}
+./configure --target-arch=morello --debug
+gmake -j4
+~~~
+
+## Unit Tests
+
+Firstly, ensure that the DPDK physically contiguous memory driver is installed and loaded as described above.
+
+Then run the unit tests with:
+~~~{.sh}
+./test/unit/unittest.sh
+~~~
+
+## Known Issues
+
+There is no purecap version of cunit which is a requirement for unit testing.
+
+A number of hacks have been used in order to move past blocking problems. These changes, which will need to be revisited, have been identified with:
+
+~~~{.sh}
+SPDK_ARM_MORELLO_HACK
+SPDK_ARM_PURECAP_HACK
+~~~
+
+---
+
 # Storage Performance Development Kit
 
 [![Build Status](https://travis-ci.org/spdk/spdk.svg?branch=master)](https://travis-ci.org/spdk/spdk)
