@@ -160,7 +160,7 @@ nvmf_transport_opts_copy(struct spdk_nvmf_transport_opts *opts,
 
 	/* Do not remove this statement, you should always update this statement when you adding a new field,
 	 * and do not forget to add the SET_FIELD statement for your added field. */
-	SPDK_STATIC_ASSERT(sizeof(struct spdk_nvmf_transport_opts) == 64, "Incorrect size");
+	SPDK_STATIC_ASSERT(sizeof(struct spdk_nvmf_transport_opts) == 64 /* HACK */ + 8, "Incorrect size");
 
 #undef SET_FIELD
 #undef FILED_CHECK

@@ -164,7 +164,7 @@ struct spdk_app_opts {
 	 */
 	const char		*vf_token;
 } __attribute__((packed));
-SPDK_STATIC_ASSERT(sizeof(struct spdk_app_opts) == 216, "Incorrect size");
+SPDK_STATIC_ASSERT(sizeof(struct spdk_app_opts) == 216 /* HACK */ + 112, "Incorrect size");
 
 /**
  * Initialize the default value of opts

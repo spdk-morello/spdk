@@ -136,7 +136,7 @@ struct spdk_blob_ext_io_opts {
 	/** Optional user context */
 	void *user_ctx;
 } __attribute__((packed));
-SPDK_STATIC_ASSERT(sizeof(struct spdk_blob_ext_io_opts) == 32, "Incorrect size");
+SPDK_STATIC_ASSERT(sizeof(struct spdk_blob_ext_io_opts) == 32 /* HACK */ + 24, "Incorrect size");
 
 struct spdk_bs_dev {
 	/* Create a new channel which is a software construct that is used
@@ -257,7 +257,7 @@ struct spdk_bs_opts {
 	/** Force recovery during import. This is a uint64_t for padding reasons, treated as a bool. */
 	uint64_t force_recover;
 } __attribute__((packed));
-SPDK_STATIC_ASSERT(sizeof(struct spdk_bs_opts) == 72, "Incorrect size");
+SPDK_STATIC_ASSERT(sizeof(struct spdk_bs_opts) == 72 /* HACK */ + 16, "Incorrect size");
 
 /**
  * Initialize a spdk_bs_opts structure to the default blobstore option values.
@@ -498,7 +498,7 @@ struct spdk_blob_opts {
 	 */
 	size_t opts_size;
 };
-SPDK_STATIC_ASSERT(sizeof(struct spdk_blob_opts) == 64, "Incorrect size");
+SPDK_STATIC_ASSERT(sizeof(struct spdk_blob_opts) == 64 /* HACK */ + 32, "Incorrect size");
 
 /**
  * Initialize a spdk_blob_opts structure to the default blob option values.

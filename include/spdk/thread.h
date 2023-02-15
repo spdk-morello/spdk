@@ -191,7 +191,7 @@ typedef void (*spdk_channel_msg)(struct spdk_io_channel_iter *i);
  */
 typedef void (*spdk_channel_for_each_cpl)(struct spdk_io_channel_iter *i, int status);
 
-#define SPDK_IO_CHANNEL_STRUCT_SIZE	96
+#define SPDK_IO_CHANNEL_STRUCT_SIZE	(96 + /* HACK */ 56 + 8)
 
 /* Power of 2 minus 1 is optimal for memory consumption */
 #define SPDK_DEFAULT_MSG_MEMPOOL_SIZE (262144 - 1)

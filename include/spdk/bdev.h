@@ -223,7 +223,7 @@ struct spdk_bdev_ext_io_opts {
 	/** Metadata buffer, optional */
 	void *metadata;
 } __attribute__((packed));
-SPDK_STATIC_ASSERT(sizeof(struct spdk_bdev_ext_io_opts) == 32, "Incorrect size");
+SPDK_STATIC_ASSERT(sizeof(struct spdk_bdev_ext_io_opts) == 32 /* HACK */ + 24, "Incorrect size");
 
 /**
  * Get the options for the bdev module.

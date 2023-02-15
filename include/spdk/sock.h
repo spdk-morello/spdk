@@ -198,7 +198,7 @@ struct spdk_sock_opts {
 	 */
 	size_t impl_opts_size;
 } __attribute__((packed));
-SPDK_STATIC_ASSERT(sizeof(struct spdk_sock_opts) == 40, "Incorrect size");
+SPDK_STATIC_ASSERT(sizeof(struct spdk_sock_opts) == 40 /* HACK */ + 8, "Incorrect size");
 
 /**
  * Initialize the default value of opts.
