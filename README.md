@@ -57,7 +57,7 @@ Note that the modules need to match the type of kernel that is running (hybrid o
 The modules can be installed in /boot/modules using:
 
 ~~~{.sh}
-sudo cp XXXX   <build-path>/kernel/freebsd/*.ko /boot/modules
+sudo cp dpdk/build/kmod/*.ko /boot/modules
 sudo kldxref /boot/modules
 ~~~
 
