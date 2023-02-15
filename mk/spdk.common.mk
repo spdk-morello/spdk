@@ -124,7 +124,9 @@ COMMON_CFLAGS += -D_GNU_SOURCE
 COMMON_CFLAGS += -fPIC
 
 # Enable stack buffer overflow checking
+ifneq ($(TARGET_ARCHITECTURE),morello)
 COMMON_CFLAGS += -fstack-protector
+endif
 
 ifeq ($(OS).$(CC_TYPE),Windows.gcc)
 # Workaround for gcc bug 86832 - invalid TLS usage
@@ -154,8 +156,14 @@ endif
 SYS_LIBS =
 
 ifeq ($(OS),FreeBSD)
+ifeq ($(wildcard /usr/include/cheri/cheri.h).$(TARGET_ARCHITECTURE),\
+	/usr/include/cheri/cheri.h.armv8-a)
+SYS_LIBS += -L/usr/local64/lib
+COMMON_CFLAGS += -I/usr/local64/include
+else
 SYS_LIBS += -L/usr/local/lib
 COMMON_CFLAGS += -I/usr/local/include
+endif
 endif
 
 # Attach only if PMDK lib specified with configure

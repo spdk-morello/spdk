@@ -682,7 +682,13 @@ if [[ $arch == x86_64* ]]; then
 else
 	BUILD_CMD=($CC -o /dev/null -x c $CPPFLAGS $CFLAGS $LDFLAGS)
 fi
-BUILD_CMD+=(-I/usr/local/include -L/usr/local/lib)
+
+if [[ $(uname -s) = FreeBSD && -f /usr/include/cheri/cheri.h \
+	&& CONFIG[ARCH] != morello ]]; then
+	BUILD_CMD+=(-I/usr/local64/include -L/usr/local64/lib)
+else
+	BUILD_CMD+=(-I/usr/local/include -L/usr/local/lib)
+fi
 
 if [[ "${CONFIG[VFIO_USER]}" = "y" ]]; then
 	if ! echo -e '#include <json-c/json.h>' \
