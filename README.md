@@ -85,7 +85,7 @@ gmake -j4
 For a hybrid debug build:
 
 ~~~{.sh}
-CC=clang CXX=clang ./configure --target-arch=armv8-a --debug
+CC=clang CXX=clang ./configure --target-arch=armv8-a --enable-debug
 gmake -j4
 ~~~
 
@@ -103,7 +103,7 @@ gmake -j4
 For a purecap debug build:
 
 ~~~{.sh}
-./configure --target-arch=morello --debug
+./configure --target-arch=morello --enable-debug
 gmake -j4
 ~~~
 
