@@ -14,8 +14,8 @@ visudo
 To perform a native build on CheriBSD, the following packages are required:
 
 ~~~{.sh}
-sudo pkg64c install bash git libelf e2fsprogs-libuuid
-sudo pkg64 install meson ninja python llvm llvm-base py39-pip libelf gdb-cheri
+sudo pkg64c install bash git e2fsprogs-libuuid
+sudo pkg64 install meson ninja python llvm llvm-base py39-pip gdb-cheri
 sudo pkg64 install pkgconf gmake cunit openssl e2fsprogs-libuuid ncurses
 sudo pkg64 install py39-pyelftools autoconf automake libtool help2man
 sudo pkg64 install doxygen mscgen graphviz
