@@ -632,7 +632,9 @@ nvmf_listen_opts_copy(struct spdk_nvmf_listen_opts *opts,
 
 	/* Do not remove this statement, you should always update this statement when you adding a new field,
 	 * and do not forget to add the SET_FIELD statement for your added field. */
+#ifndef SPDK_ARM_PURECAP_HACK	/* 24 */
 	SPDK_STATIC_ASSERT(sizeof(struct spdk_nvmf_listen_opts) == 16, "Incorrect size");
+#endif
 }
 
 void

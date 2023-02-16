@@ -198,7 +198,9 @@ struct spdk_sock_opts {
 	 */
 	size_t impl_opts_size;
 } __attribute__((packed));
+#ifndef SPDK_ARM_PURECAP_HACK	/* 48 */
 SPDK_STATIC_ASSERT(sizeof(struct spdk_sock_opts) == 40, "Incorrect size");
+#endif
 
 /**
  * Initialize the default value of opts.

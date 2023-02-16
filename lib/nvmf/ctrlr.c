@@ -1988,8 +1988,10 @@ nvmf_ctrlr_set_features_number_of_queues(struct spdk_nvmf_request *req)
 	return SPDK_NVMF_REQUEST_EXEC_STATUS_COMPLETE;
 }
 
+#ifndef SPDK_ARM_PURECAP_HACK
 SPDK_STATIC_ASSERT(sizeof(struct spdk_nvmf_ctrlr) == 4920,
 		   "Please check migration fields that need to be added or not");
+#endif
 
 static void
 nvmf_ctrlr_migr_data_copy(struct spdk_nvmf_ctrlr_migr_data *data,

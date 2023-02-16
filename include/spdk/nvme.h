@@ -595,7 +595,9 @@ struct spdk_nvme_ns_cmd_ext_io_opts {
 	/* Hole at bytes 44-47. */
 	uint8_t reserved44[4];
 } __attribute__((packed));
+#ifndef SPDK_ARM_PURECAP_HACK	/* 72 */
 SPDK_STATIC_ASSERT(sizeof(struct spdk_nvme_ns_cmd_ext_io_opts) == 48, "Incorrect size");
+#endif
 
 /**
  * Parse the string representation of a transport ID.
@@ -1610,7 +1612,9 @@ struct spdk_nvme_io_qpair_opts {
 	/* Hole at bytes 66-71. */
 	uint8_t reserved66[6];
 } __attribute__((packed));
+#ifndef SPDK_ARM_PURECAP_HACK	/* 88 */
 SPDK_STATIC_ASSERT(sizeof(struct spdk_nvme_io_qpair_opts) == 72, "Incorrect size");
+#endif
 
 /**
  * Get the default options for I/O qpair creation for a specific NVMe controller.

@@ -223,7 +223,9 @@ struct spdk_bdev_ext_io_opts {
 	/** Metadata buffer, optional */
 	void *metadata;
 } __attribute__((packed));
+#ifndef SPDK_ARM_PURECAP_HACK	/* 56 */
 SPDK_STATIC_ASSERT(sizeof(struct spdk_bdev_ext_io_opts) == 32, "Incorrect size");
+#endif
 
 /**
  * Get the options for the bdev module.

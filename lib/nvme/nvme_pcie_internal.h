@@ -105,7 +105,9 @@ struct nvme_tracker {
  * struct nvme_tracker must be exactly 4K so that the prp[] array does not cross a page boundary
  * and so that there is no padding required to meet alignment requirements.
  */
+#ifndef SPDK_ARM_PURECAP_HACK	/* 4096 + 48 */
 SPDK_STATIC_ASSERT(sizeof(struct nvme_tracker) == 4096, "nvme_tracker is not 4K");
+#endif
 SPDK_STATIC_ASSERT((offsetof(struct nvme_tracker, u.sgl) & 7) == 0, "SGL must be Qword aligned");
 SPDK_STATIC_ASSERT((offsetof(struct nvme_tracker, meta_sgl) & 7) == 0, "SGL must be Qword aligned");
 

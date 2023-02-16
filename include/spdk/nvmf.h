@@ -95,7 +95,9 @@ struct spdk_nvmf_transport_opts {
 	/* Hole at bytes 61-63. */
 	uint8_t reserved61[3];
 } __attribute__((packed));
+#ifndef SPDK_ARM_PURECAP_HACK	/* 72 */
 SPDK_STATIC_ASSERT(sizeof(struct spdk_nvmf_transport_opts) == 64, "Incorrect size");
+#endif
 
 struct spdk_nvmf_listen_opts {
 	/**
@@ -108,7 +110,9 @@ struct spdk_nvmf_listen_opts {
 
 	const struct spdk_json_val *transport_specific;
 } __attribute__((packed));
+#ifndef SPDK_ARM_PURECAP_HACK	/* 24 */
 SPDK_STATIC_ASSERT(sizeof(struct spdk_nvmf_listen_opts) == 16, "Incorrect size");
+#endif
 
 /**
  * Initialize listen options

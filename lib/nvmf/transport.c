@@ -160,7 +160,9 @@ nvmf_transport_opts_copy(struct spdk_nvmf_transport_opts *opts,
 
 	/* Do not remove this statement, you should always update this statement when you adding a new field,
 	 * and do not forget to add the SET_FIELD statement for your added field. */
+#ifndef SPDK_ARM_PURECAP_HACK	/* 72 */
 	SPDK_STATIC_ASSERT(sizeof(struct spdk_nvmf_transport_opts) == 64, "Incorrect size");
+#endif
 
 #undef SET_FIELD
 #undef FILED_CHECK

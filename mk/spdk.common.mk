@@ -136,6 +136,14 @@ endif
 # Prevent accidental multiple definitions of global variables
 COMMON_CFLAGS += -fno-common
 
+# Add flags for Morello
+ifeq ($(OS).$(wildcard /usr/include/cheri/cheri.h),FreeBSD./usr/include/cheri/cheri.h)
+COMMON_CFLAGS += -DSPDK_ARM_MORELLO -DSPDK_ARM_MORELLO_HACK
+ifeq ($(TARGET_ARCHITECTURE),morello)
+COMMON_CFLAGS += -DSPDK_ARM_PURECAP -DSPDK_ARM_PURECAP_HACK
+endif
+endif
+
 # Enable full RELRO - no lazy relocation (resolve everything at load time).
 # This allows the GOT to be made read-only early in the loading process.
 ifneq ($(OS),Windows)

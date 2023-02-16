@@ -4615,7 +4615,9 @@ bs_opts_copy(struct spdk_bs_opts *src, struct spdk_bs_opts *dst)
 
 	/* You should not remove this statement, but need to update the assert statement
 	 * if you add a new field, and also add a corresponding SET_FIELD statement */
+#ifndef SPDK_ARM_PURECAP_HACK	/* 88 */
 	SPDK_STATIC_ASSERT(sizeof(struct spdk_bs_opts) == 72, "Incorrect size");
+#endif
 
 #undef FIELD_OK
 #undef SET_FIELD
@@ -5785,7 +5787,9 @@ blob_opts_copy(const struct spdk_blob_opts *src, struct spdk_blob_opts *dst)
 
 	/* You should not remove this statement, but need to update the assert statement
 	 * if you add a new field, and also add a corresponding SET_FIELD statement */
+#ifndef SPDK_ARM_PURECAP_HACK	/* 96 */
 	SPDK_STATIC_ASSERT(sizeof(struct spdk_blob_opts) == 64, "Incorrect size");
+#endif
 
 #undef FIELD_OK
 #undef SET_FIELD

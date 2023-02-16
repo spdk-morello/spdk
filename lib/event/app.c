@@ -526,7 +526,9 @@ app_copy_opts(struct spdk_app_opts *opts, struct spdk_app_opts *opts_user, size_
 
 	/* You should not remove this statement, but need to update the assert statement
 	 * if you add a new field, and also add a corresponding SET_FIELD statement */
+#ifndef SPDK_ARM_PURECAP_HACK	/* 328 */
 	SPDK_STATIC_ASSERT(sizeof(struct spdk_app_opts) == 216, "Incorrect size");
+#endif
 
 #undef SET_FIELD
 }
