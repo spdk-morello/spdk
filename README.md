@@ -79,7 +79,7 @@ To create a hybrid build:
 
 ~~~{.sh}
 export PKG_CONFIG_PATH=`pwd`/dpdk/config/hybrid
-CC=clang CXX=clang ./configure --target-arch=armv8-a
+CC=clang CXX=clang++ ./configure --target-arch=armv8-a
 gmake -j4
 ~~~
 
@@ -87,7 +87,7 @@ For a hybrid debug build:
 
 ~~~{.sh}
 export PKG_CONFIG_PATH=`pwd`/dpdk/config/hybrid
-CC=clang CXX=clang ./configure --target-arch=armv8-a --enable-debug
+CC=clang CXX=clang++ ./configure --target-arch=armv8-a --enable-debug
 gmake -j4
 ~~~
 
