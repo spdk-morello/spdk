@@ -78,6 +78,7 @@ kld_list="contigmem nic_uio"
 To create a hybrid build:
 
 ~~~{.sh}
+export PKG_CONFIG_PATH=`pwd`/dpdk/config/hybrid
 CC=clang CXX=clang ./configure --target-arch=armv8-a
 gmake -j4
 ~~~
@@ -85,6 +86,7 @@ gmake -j4
 For a hybrid debug build:
 
 ~~~{.sh}
+export PKG_CONFIG_PATH=`pwd`/dpdk/config/hybrid
 CC=clang CXX=clang ./configure --target-arch=armv8-a --enable-debug
 gmake -j4
 ~~~
@@ -96,6 +98,7 @@ The purecap build produces multiple errors, especially related to increased stru
 To create a purecap build:
 
 ~~~{.sh}
+unset PKG_CONFIG_PATH
 ./configure --target-arch=morello
 gmake -j4
 ~~~
@@ -103,6 +106,7 @@ gmake -j4
 For a purecap debug build:
 
 ~~~{.sh}
+unset PKG_CONFIG_PATH
 ./configure --target-arch=morello --enable-debug
 gmake -j4
 ~~~
@@ -114,6 +118,15 @@ Firstly, ensure that the DPDK physically contiguous memory driver is installed a
 Then run the unit tests with:
 ~~~{.sh}
 ./test/unit/unittest.sh
+~~~
+
+## Example
+
+The SPDK binaries in build/bin can be used to create an example target stack:
+
+~~~{.sh}
+# NVMe over TCP RAM disk (replace LOCAL-IP in sample-nvmf.json)
+sudo build/bin/nvmf_tgt -c test/sample-nvmf.json"
 ~~~
 
 ## Known Issues
