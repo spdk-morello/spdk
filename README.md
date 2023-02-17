@@ -98,7 +98,7 @@ The purecap build produces multiple errors, especially related to increased stru
 To create a purecap build:
 
 ~~~{.sh}
-unset PKG_CONFIG_PATH
+export PKG_CONFIG_PATH=`pwd`/dpdk/config/purecap
 ./configure --target-arch=morello
 gmake -j4
 ~~~
@@ -106,7 +106,7 @@ gmake -j4
 For a purecap debug build:
 
 ~~~{.sh}
-unset PKG_CONFIG_PATH
+export PKG_CONFIG_PATH=`pwd`/dpdk/config/purecap
 ./configure --target-arch=morello --enable-debug
 gmake -j4
 ~~~
