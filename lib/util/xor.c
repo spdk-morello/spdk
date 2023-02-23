@@ -114,7 +114,7 @@ do_xor_gen(void *dest, void **sources, uint32_t n, uint32_t len)
 
 #else
 
-#define SPDK_XOR_BUF_ALIGN sizeof(uint64_t)
+#define SPDK_XOR_BUF_ALIGN sizeof(void *)
 
 static inline int
 do_xor_gen(void *dest, void **sources, uint32_t n, uint32_t len)
