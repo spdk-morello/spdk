@@ -132,8 +132,12 @@ struct spdk_ftl_conf {
 	 * structure are valid. And the library will populate any remaining fields with default values.
 	 */
 	size_t					conf_size;
+#ifndef SPDK_ARM_PURECAP_HACK
 } __attribute__((packed));
 SPDK_STATIC_ASSERT(sizeof(struct spdk_ftl_conf) == 136, "Incorrect size");
+#else
+};
+#endif
 
 enum spdk_ftl_mode {
 	/* Create new device */
