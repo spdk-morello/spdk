@@ -1539,7 +1539,7 @@ test_nvmf_ns_reservation_report(void)
 	CU_ASSERT(req.rsp->nvme_cpl.status.sct == SPDK_NVME_SCT_GENERIC);
 	CU_ASSERT(req.rsp->nvme_cpl.status.sc == SPDK_NVME_SC_SUCCESS);
 	/* Get ctrlr data and status data pointers */
-	ctrlr_data = (void *)((uint64_t)req.data + sizeof(*status_data));
+	ctrlr_data = (void *)((uintptr_t)req.data + sizeof(*status_data));
 	status_data = (void *)req.data;
 	SPDK_CU_ASSERT_FATAL(status_data != NULL && ctrlr_data != NULL);
 	CU_ASSERT(status_data->data.gen == 1);
