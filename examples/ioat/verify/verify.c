@@ -99,8 +99,8 @@ static void
 prepare_ioat_task(struct thread_entry *thread_entry, struct ioat_task *ioat_task)
 {
 	int len;
-	uintptr_t src_offset;
-	uintptr_t dst_offset;
+	size_t src_offset;
+	size_t dst_offset;
 	uint64_t fill_pattern;
 
 	if (ioat_task->type == IOAT_FILL_TYPE) {
