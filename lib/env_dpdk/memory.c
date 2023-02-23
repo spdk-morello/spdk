@@ -127,8 +127,8 @@ mem_map_notify_walk(struct spdk_mem_map *map, enum spdk_mem_map_notify_action ac
 {
 	size_t idx_256tb;
 	uint64_t idx_1gb;
-	uint64_t contig_start = UINT64_MAX;
-	uint64_t contig_end = UINT64_MAX;
+	uintptr_t contig_start = UINT64_MAX;
+	uintptr_t contig_end = UINT64_MAX;
 	struct map_1gb *map_1gb;
 	int rc;
 
@@ -149,7 +149,7 @@ mem_map_notify_walk(struct spdk_mem_map *map, enum spdk_mem_map_notify_action ac
 				/* End of of a virtually contiguous range */
 				rc = map->ops.notify_cb(map->cb_ctx, map, action,
 							(void *)contig_start,
-							contig_end - contig_start + VALUE_2MB);
+							(size_t)(contig_end - contig_start + VALUE_2MB));
 				/* Don't bother handling unregister failures. It can't be any worse */
 				if (rc != 0 && action == SPDK_MEM_MAP_NOTIFY_REGISTER) {
 					goto err_unregister;
@@ -596,7 +596,7 @@ spdk_mem_map_set_translation(struct spdk_mem_map *map, uint64_t vaddr, uint64_t 
 	while (size) {
 		map_1gb = mem_map_get_map_1gb(map, vfn_2mb);
 		if (!map_1gb) {
-			DEBUG_PRINT("could not get %p map\n", (void *)vaddr);
+			DEBUG_PRINT("could not get %#" PRIx64 " map\n", vaddr);
 			return -ENOMEM;
 		}
 
@@ -630,7 +630,7 @@ spdk_mem_map_translate(const struct spdk_mem_map *map, uint64_t vaddr, uint64_t 
 	uint64_t orig_translation;
 
 	if (spdk_unlikely(vaddr & ~MASK_256TB)) {
-		DEBUG_PRINT("invalid usermode virtual address %p\n", (void *)vaddr);
+		DEBUG_PRINT("invalid usermode virtual address %#" PRIx64 "\n", vaddr);
 		return map->default_translation;
 	}
 
@@ -956,7 +956,7 @@ vtophys_get_paddr_memseg(uint64_t vaddr)
 
 /* Try to get the paddr from /proc/self/pagemap */
 static uint64_t
-vtophys_get_paddr_pagemap(uint64_t vaddr)
+vtophys_get_paddr_pagemap(uintptr_t vaddr)
 {
 	uintptr_t paddr;
 
@@ -1109,7 +1109,7 @@ vtophys_notify(void *cb_ctx, struct spdk_mem_map *map,
 #endif
 			{
 				/* Get the physical address from /proc/self/pagemap. */
-				paddr = vtophys_get_paddr_pagemap((uint64_t)vaddr);
+				paddr = vtophys_get_paddr_pagemap((uintptr_t)vaddr);
 				if (paddr == SPDK_VTOPHYS_ERROR) {
 					DEBUG_PRINT("could not get phys addr for %p\n", vaddr);
 					return -EFAULT;
@@ -1118,7 +1118,7 @@ vtophys_notify(void *cb_ctx, struct spdk_mem_map *map,
 				/* Get paddr for each 2MB chunk in this address range */
 				while (len > 0) {
 					/* Get the physical address from /proc/self/pagemap. */
-					paddr = vtophys_get_paddr_pagemap((uint64_t)vaddr);
+					paddr = vtophys_get_paddr_pagemap((uintptr_t)vaddr);
 
 					if (paddr == SPDK_VTOPHYS_ERROR) {
 						DEBUG_PRINT("could not get phys addr for %p\n", vaddr);
