@@ -1200,7 +1200,7 @@ nvme_pcie_prp_list_append(struct spdk_nvme_ctrlr *ctrlr, struct nvme_tracker *tr
 			  uint32_t page_size)
 {
 	struct spdk_nvme_cmd *cmd = &tr->req->cmd;
-	uintptr_t page_mask = page_size - 1;
+	uint32_t page_mask = page_size - 1;
 	uint64_t phys_addr;
 	uint32_t i;
 
@@ -1232,7 +1232,7 @@ nvme_pcie_prp_list_append(struct spdk_nvme_ctrlr *ctrlr, struct nvme_tracker *tr
 		}
 
 		if (i == 0) {
-			SPDK_DEBUGLOG(nvme, "prp1 = %p\n", (void *)phys_addr);
+			SPDK_DEBUGLOG(nvme, "prp1 = %#" PRIx64 "\n", phys_addr);
 			cmd->dptr.prp.prp1 = phys_addr;
 			seg_len = page_size - ((uintptr_t)virt_addr & page_mask);
 		} else {
@@ -1241,7 +1241,7 @@ nvme_pcie_prp_list_append(struct spdk_nvme_ctrlr *ctrlr, struct nvme_tracker *tr
 				return -EFAULT;
 			}
 
-			SPDK_DEBUGLOG(nvme, "prp[%u] = %p\n", i - 1, (void *)phys_addr);
+			SPDK_DEBUGLOG(nvme, "prp[%u] = %#" PRIx64 "\n", i - 1, phys_addr);
 			tr->u.prp[i - 1] = phys_addr;
 			seg_len = page_size;
 		}
@@ -1257,10 +1257,10 @@ nvme_pcie_prp_list_append(struct spdk_nvme_ctrlr *ctrlr, struct nvme_tracker *tr
 		cmd->dptr.prp.prp2 = 0;
 	} else if (i == 2) {
 		cmd->dptr.prp.prp2 = tr->u.prp[0];
-		SPDK_DEBUGLOG(nvme, "prp2 = %p\n", (void *)cmd->dptr.prp.prp2);
+		SPDK_DEBUGLOG(nvme, "prp2 = %#" PRIx64 "\n", cmd->dptr.prp.prp2);
 	} else {
 		cmd->dptr.prp.prp2 = tr->prp_sgl_bus_addr;
-		SPDK_DEBUGLOG(nvme, "prp2 = %p (PRP list)\n", (void *)cmd->dptr.prp.prp2);
+		SPDK_DEBUGLOG(nvme, "prp2 = %#" PRIx64 " (PRP list)\n", cmd->dptr.prp.prp2);
 	}
 
 	*prp_index = i;
