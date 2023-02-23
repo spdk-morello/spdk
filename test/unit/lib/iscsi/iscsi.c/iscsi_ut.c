@@ -2102,7 +2102,7 @@ pdu_payload_read_test(void)
 	pdu.data_segment_len = SPDK_ISCSI_MAX_RECV_DATA_SEGMENT_LENGTH;
 	pdu.data_buf_len = SPDK_BDEV_BUF_SIZE_WITH_MD(SPDK_ISCSI_MAX_RECV_DATA_SEGMENT_LENGTH);
 	pdu.mobj[0] = &mobj1;
-	pdu.data = (void *)((uint64_t)mobj1.buf + SPDK_ISCSI_MAX_RECV_DATA_SEGMENT_LENGTH / 2);
+	pdu.data = (void *)((uintptr_t)mobj1.buf + SPDK_ISCSI_MAX_RECV_DATA_SEGMENT_LENGTH / 2);
 	pdu.data_from_mempool = true;
 	g_conn_read_len = SPDK_ISCSI_MAX_RECV_DATA_SEGMENT_LENGTH / 2;
 
@@ -2154,7 +2154,7 @@ check_pdu_hdr_handle(struct spdk_iscsi_pdu *pdu, struct spdk_mobj *mobj, uint32_
 		     struct spdk_iscsi_task *primary)
 {
 	CU_ASSERT(pdu->mobj[0] == mobj);
-	CU_ASSERT(pdu->data == NULL || pdu->data == (void *)((uint64_t)mobj->buf + offset));
+	CU_ASSERT(pdu->data == NULL || pdu->data == (void *)((uintptr_t)mobj->buf + offset));
 	CU_ASSERT(primary->mobj == NULL);
 }
 
