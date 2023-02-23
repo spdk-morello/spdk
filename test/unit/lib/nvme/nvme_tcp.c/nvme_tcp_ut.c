@@ -98,7 +98,7 @@ test_nvme_tcp_pdu_set_data_buf(void)
 	 */
 	data_len = 0;
 	for (i = 0; i < NVME_TCP_MAX_SGL_DESCRIPTORS; i++) {
-		iov[i].iov_base = (void *)(0xDEADBEEF + i);
+		iov[i].iov_base = (void *)((uintptr_t)0xDEADBEEF + i);
 		iov[i].iov_len = 512 * (i + 1);
 		data_len += 512 * (i + 1);
 	}
@@ -235,7 +235,7 @@ test_nvme_tcp_build_sgl_request(void)
 	req.qpair = &tqpair.qpair;
 
 	for (i = 0; i < NVME_TCP_MAX_SGL_DESCRIPTORS; i++) {
-		bio.iovs[i].iov_base = (void *)(0xFEEDB000 + i * 0x1000);
+		bio.iovs[i].iov_base = (void *)((uintptr_t)0xFEEDB000 + i * 0x1000);
 		bio.iovs[i].iov_len = 0;
 	}
 
