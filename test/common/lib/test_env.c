@@ -163,7 +163,7 @@ spdk_malloc(size_t size, size_t align, uint64_t *phys_addr, int socket_id, uint3
 	}
 
 	if (align == 0) {
-		align = 8;
+		align = spdk_max(sizeof(void *), 8);
 	}
 
 	if (posix_memalign(&buf, align, size)) {
