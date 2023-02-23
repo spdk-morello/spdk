@@ -591,7 +591,7 @@ test_scheduler(void)
 	end_time = current_time + idle_time + busy_time;
 	for (i = 0; i < 3; i++) {
 		spdk_set_thread(thread[i]);
-		idle = spdk_poller_register(poller_run_idle, (void *)idle_time, 0);
+		idle = spdk_poller_register(poller_run_idle, (void *)(uintptr_t)idle_time, 0);
 		reactor = spdk_reactor_get(i);
 		CU_ASSERT(reactor != NULL);
 		MOCK_SET(spdk_get_ticks, current_time);
@@ -668,7 +668,7 @@ test_scheduler(void)
 	idle_time = 0;
 	for (i = 0; i < 3; i++) {
 		spdk_set_thread(thread[i]);
-		busy = spdk_poller_register(poller_run_busy, (void *)busy_time, 0);
+		busy = spdk_poller_register(poller_run_busy, (void *)(uintptr_t)busy_time, 0);
 		_reactor_run(reactor);
 		spdk_poller_unregister(&busy);
 		current_time += busy_time;
