@@ -456,8 +456,8 @@ ioat_channel_start(struct spdk_ioat_chan *ioat)
 	if (is_ioat_idle(status)) {
 		ioat_process_channel_events(ioat);
 	} else {
-		SPDK_ERRLOG("could not start channel: status = %p\n error = %#x\n",
-			    (void *)status, ioat->regs->chanerr);
+		SPDK_ERRLOG("could not start channel: status = %#" PRIx64 "\n error = %#x\n",
+			    status, ioat->regs->chanerr);
 		return -1;
 	}
 
@@ -577,7 +577,7 @@ spdk_ioat_build_copy(struct spdk_ioat_chan *ioat, void *cb_arg, spdk_ioat_req_cb
 {
 	struct ioat_descriptor	*last_desc;
 	uint64_t	remaining, op_size;
-	uint64_t	vdst, vsrc;
+	uintptr_t	vdst, vsrc;
 	uint64_t	pdst_addr, psrc_addr, dst_len, src_len;
 	uint32_t	orig_head;
 
@@ -587,8 +587,8 @@ spdk_ioat_build_copy(struct spdk_ioat_chan *ioat, void *cb_arg, spdk_ioat_req_cb
 
 	orig_head = ioat->head;
 
-	vdst = (uint64_t)dst;
-	vsrc = (uint64_t)src;
+	vdst = (uintptr_t)dst;
+	vsrc = (uintptr_t)src;
 
 	remaining = nbytes;
 	while (remaining) {
@@ -658,7 +658,7 @@ spdk_ioat_build_fill(struct spdk_ioat_chan *ioat, void *cb_arg, spdk_ioat_req_cb
 {
 	struct ioat_descriptor	*last_desc = NULL;
 	uint64_t	remaining, op_size;
-	uint64_t	vdst;
+	uintptr_t	vdst;
 	uint64_t	pdst_addr, dst_len;
 	uint32_t	orig_head;
 
@@ -673,7 +673,7 @@ spdk_ioat_build_fill(struct spdk_ioat_chan *ioat, void *cb_arg, spdk_ioat_req_cb
 
 	orig_head = ioat->head;
 
-	vdst = (uint64_t)dst;
+	vdst = (uintptr_t)dst;
 	remaining = nbytes;
 
 	while (remaining) {
