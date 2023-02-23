@@ -163,9 +163,11 @@ struct spdk_app_opts {
 	 * The vf_token is an UUID that shared between SR-IOV PF and VF.
 	 */
 	const char		*vf_token;
-} __attribute__((packed));
 #ifndef SPDK_ARM_PURECAP_HACK	/* 328 */
+} __attribute__((packed));
 SPDK_STATIC_ASSERT(sizeof(struct spdk_app_opts) == 216, "Incorrect size");
+#else
+};
 #endif
 
 /**

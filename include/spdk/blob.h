@@ -135,9 +135,11 @@ struct spdk_blob_ext_io_opts {
 	void *memory_domain_ctx;
 	/** Optional user context */
 	void *user_ctx;
-} __attribute__((packed));
 #ifndef SPDK_ARM_PURECAP_HACK	/* 56 */
+} __attribute__((packed));
 SPDK_STATIC_ASSERT(sizeof(struct spdk_blob_ext_io_opts) == 32, "Incorrect size");
+#else
+};
 #endif
 
 struct spdk_bs_dev {
@@ -258,9 +260,11 @@ struct spdk_bs_opts {
 
 	/** Force recovery during import. This is a uint64_t for padding reasons, treated as a bool. */
 	uint64_t force_recover;
-} __attribute__((packed));
 #ifndef SPDK_ARM_PURECAP_HACK	/* 88 */
+} __attribute__((packed));
 SPDK_STATIC_ASSERT(sizeof(struct spdk_bs_opts) == 72, "Incorrect size");
+#else
+};
 #endif
 
 /**

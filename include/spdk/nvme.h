@@ -594,9 +594,11 @@ struct spdk_nvme_ns_cmd_ext_io_opts {
 	uint16_t apptag;
 	/* Hole at bytes 44-47. */
 	uint8_t reserved44[4];
-} __attribute__((packed));
 #ifndef SPDK_ARM_PURECAP_HACK	/* 72 */
+} __attribute__((packed));
 SPDK_STATIC_ASSERT(sizeof(struct spdk_nvme_ns_cmd_ext_io_opts) == 48, "Incorrect size");
+#else
+};
 #endif
 
 /**
@@ -1611,9 +1613,11 @@ struct spdk_nvme_io_qpair_opts {
 
 	/* Hole at bytes 66-71. */
 	uint8_t reserved66[6];
-} __attribute__((packed));
 #ifndef SPDK_ARM_PURECAP_HACK	/* 88 */
+} __attribute__((packed));
 SPDK_STATIC_ASSERT(sizeof(struct spdk_nvme_io_qpair_opts) == 72, "Incorrect size");
+#else
+};
 #endif
 
 /**

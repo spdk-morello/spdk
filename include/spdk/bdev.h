@@ -222,9 +222,11 @@ struct spdk_bdev_ext_io_opts {
 	void *memory_domain_ctx;
 	/** Metadata buffer, optional */
 	void *metadata;
-} __attribute__((packed));
 #ifndef SPDK_ARM_PURECAP_HACK	/* 56 */
+} __attribute__((packed));
 SPDK_STATIC_ASSERT(sizeof(struct spdk_bdev_ext_io_opts) == 32, "Incorrect size");
+#else
+};
 #endif
 
 /**
