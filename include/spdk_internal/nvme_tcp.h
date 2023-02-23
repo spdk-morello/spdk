@@ -489,7 +489,7 @@ nvme_tcp_pdu_set_data_buf(struct nvme_tcp_pdu *pdu,
 	}
 
 	if (iovcnt == 1) {
-		_nvme_tcp_pdu_set_data(pdu, (void *)((uint64_t)iov[0].iov_base + buf_offset), buf_len);
+		_nvme_tcp_pdu_set_data(pdu, (void *)((uintptr_t)iov[0].iov_base + buf_offset), buf_len);
 	} else {
 		pdu_sgl = &pdu->sgl;
 
