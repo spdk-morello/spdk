@@ -28,7 +28,7 @@ ut_io_msg_fn(struct spdk_nvme_ctrlr *ctrlr, uint32_t nsid, void *arg)
 {
 	static uint32_t i = 0;
 
-	CU_ASSERT(arg == (void *)(0xDEADBEEF + sizeof(int *) * i));
+	CU_ASSERT(arg == (void *)((uintptr_t)0xDEADBEEF + sizeof(int *) * i));
 	CU_ASSERT(nsid == i);
 	CU_ASSERT(ctrlr->external_io_msgs_qpair == (struct spdk_nvme_qpair *)0xDBADBEEF);
 	i++;
@@ -50,7 +50,7 @@ test_nvme_io_msg_process(void)
 	/* Send IO processing size requests */
 	for (i = 0; i < SPDK_NVME_MSG_IO_PROCESS_SIZE; i ++) {
 		nvme_io_msg_send(&ctrlr, i, ut_io_msg_fn,
-				 (void *)(0xDEADBEEF + sizeof(int *) * i));
+				 (void *)((uintptr_t)0xDEADBEEF + sizeof(int *) * i));
 	}
 
 	rc = nvme_io_msg_process(&ctrlr);
