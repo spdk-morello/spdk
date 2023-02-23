@@ -4284,7 +4284,7 @@ iscsi_pdu_hdr_op_data(struct spdk_iscsi_conn *conn, struct spdk_iscsi_pdu *pdu)
 	} else {
 		/* Set up the data buffer from the one saved by the primary task. */
 		pdu->mobj[0] = mobj;
-		pdu->data = (void *)((uint64_t)mobj->buf + mobj->data_len);
+		pdu->data = (void *)((uintptr_t)mobj->buf + mobj->data_len);
 		pdu->data_from_mempool = true;
 		pdu->data_buf_len = SPDK_BDEV_BUF_SIZE_WITH_MD(iscsi_get_mobj_max_data_len(mobj));
 
