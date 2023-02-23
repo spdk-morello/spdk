@@ -1114,7 +1114,11 @@ accel_update_buf(void **buf, struct accel_buffer *accel_buf)
 {
 	uintptr_t offset;
 
+#ifdef SPDK_ARM_PURECAP_HACK
+	offset = (uintptr_t)(*buf) & (size_t)ACCEL_BUFFER_OFFSET_MASK;
+#else
 	offset = (uintptr_t)(*buf) & ACCEL_BUFFER_OFFSET_MASK;
+#endif
 	assert(offset < accel_buf->len);
 
 	*buf = (char *)accel_buf->buf + offset;
