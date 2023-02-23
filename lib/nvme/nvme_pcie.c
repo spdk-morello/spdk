@@ -413,7 +413,7 @@ nvme_pcie_ctrlr_map_io_cmb(struct spdk_nvme_ctrlr *ctrlr, size_t *size)
 	struct nvme_pcie_ctrlr *pctrlr = nvme_pcie_ctrlr(ctrlr);
 	union spdk_nvme_cmbsz_register cmbsz;
 	union spdk_nvme_cmbloc_register cmbloc;
-	uint64_t mem_register_start, mem_register_end;
+	uintptr_t mem_register_start, mem_register_end;
 	int rc;
 
 	if (pctrlr->cmb.mem_register_addr != NULL) {
@@ -682,7 +682,7 @@ nvme_pcie_ctrlr_map_io_pmr(struct spdk_nvme_ctrlr *ctrlr, size_t *size)
 {
 	struct nvme_pcie_ctrlr *pctrlr = nvme_pcie_ctrlr(ctrlr);
 	union spdk_nvme_pmrcap_register pmrcap;
-	uint64_t mem_register_start, mem_register_end;
+	uintptr_t mem_register_start, mem_register_end;
 	int rc;
 
 	if (!pctrlr->regs->cap.bits.pmrs) {
