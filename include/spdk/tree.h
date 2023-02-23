@@ -348,10 +348,17 @@ struct {								\
 #define _RB_ROOT(head)			(head)->rbh_root
 #define RB_EMPTY(head)			(_RB_ROOT(head) == NULL)
 
+#ifdef SPDK_ARM_PURECAP_HACK
+#define RB_SET_PARENT(dst, src, field) do {				\
+	RB_BITS(dst, field) = (uintptr_t)src | \
+		(size_t)(RB_BITS(dst, field) & RB_RED_MASK);	\
+} while (/* CONSTCOND */ 0)
+#else
 #define RB_SET_PARENT(dst, src, field) do {				\
 	RB_BITS(dst, field) &= RB_RED_MASK;				\
 	RB_BITS(dst, field) |= (uintptr_t)src;			\
 } while (/* CONSTCOND */ 0)
+#endif
 
 #define RB_SET(elm, parent, field) do {					\
 	RB_UP(elm, field) = parent;					\
