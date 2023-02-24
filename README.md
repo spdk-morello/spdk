@@ -93,7 +93,10 @@ gmake -j4
 
 ## PureCap Build
 
-The purecap build produces multiple errors, especially related to increased structure sizes due to the increased size of a pointer.
+There is no purecap version of CUnit which is a requirement for unit testing.
+A temporary hacked build can be downloaded from:
+
+https://github.com/spdk-morello/CUnit/releases/download/1.0/CUnit.tgz
 
 To create a purecap build:
 
@@ -126,12 +129,25 @@ The SPDK binaries in build/bin can be used to create an example target stack:
 
 ~~~{.sh}
 # NVMe over TCP RAM disk (replace LOCAL-IP in sample-nvmf.json)
-sudo build/bin/nvmf_tgt -c test/sample-nvmf.json"
+sudo build/bin/nvmf_tgt -c test/sample-nvmf.json
+~~~
+
+To connect to the target from a Linux host:
+
+~~~{.sh}
+sudo modprobe nvme_tcp
+sudo nvme connect -t tcp -a 192.168.0.2 -n nqn.2016-06.io.spdk:cnode1
+~~~
+
+This will create an NVMe device such as /dev/nvme0n1 which can be partitioned with fdisk.
+
+To disconnect the disk:
+
+~~~{.sh}
+nvme disconnect -d /dev/nvme0
 ~~~
 
 ## Known Issues
-
-There is no purecap version of cunit which is a requirement for unit testing.
 
 A number of hacks have been used in order to move past blocking problems. These changes, which will need to be revisited, have been identified with:
 
