@@ -118,6 +118,18 @@ gmake -j4
 
 Firstly, ensure that the DPDK physically contiguous memory driver is installed and loaded as described above.
 
+In order to successfully run the sock_ut tests, kern.ipc.maxsockbuf needs to be increased:
+
+~~~{.sh}
+sudo sysctl kern.ipc.maxsockbuf=4194304
+~~~
+
+This can be made permanent by adding the following to /etc/sysctl.conf:
+
+~~~{.sh}
+kern.ipc.maxsockbuf=4194304
+~~~
+
 Then run the unit tests with:
 ~~~{.sh}
 ./test/unit/unittest.sh
@@ -136,7 +148,7 @@ To connect to the target from a Linux host:
 
 ~~~{.sh}
 sudo modprobe nvme_tcp
-sudo nvme connect -t tcp -a 192.168.0.2 -n nqn.2016-06.io.spdk:cnode1
+sudo nvme connect -t tcp -a <TARGET-IP> -n nqn.2016-06.io.spdk:cnode1
 ~~~
 
 This will create an NVMe device such as /dev/nvme0n1 which can be partitioned with fdisk.
