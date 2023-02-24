@@ -443,6 +443,8 @@ test_spdk_accel_submit_crc32cv(void)
 	struct iovec iov[32];
 	struct spdk_accel_task *expected_accel_task = NULL;
 
+	memset(iov, 0, sizeof(iov));
+
 	TAILQ_INIT(&g_accel_ch->task_pool);
 
 	for (i = 0; i < iov_cnt; i++) {
@@ -612,6 +614,9 @@ test_sequence_fill_copy(void)
 
 	ioch = spdk_accel_get_io_channel();
 	SPDK_CU_ASSERT_FATAL(ioch != NULL);
+
+	memset(src_iovs, 0, sizeof(src_iovs));
+	memset(dst_iovs, 0, sizeof(dst_iovs));
 
 	/* First check the simplest case - single task in a sequence */
 	memset(buf, 0, sizeof(buf));
@@ -811,6 +816,9 @@ test_sequence_abort(void)
 	ioch = spdk_accel_get_io_channel();
 	SPDK_CU_ASSERT_FATAL(ioch != NULL);
 
+	memset(src_iovs, 0, sizeof(src_iovs));
+	memset(dst_iovs, 0, sizeof(dst_iovs));
+
 	/* Check that aborting a sequence calls operation's callback, the operation is not executed
 	 * and the sequence is freed
 	 */
@@ -884,6 +892,9 @@ test_sequence_append_error(void)
 	ioch = spdk_accel_get_io_channel();
 	SPDK_CU_ASSERT_FATAL(ioch != NULL);
 	accel_ch = spdk_io_channel_get_ctx(ioch);
+
+	memset(&src_iovs, 0, sizeof(src_iovs));
+	memset(&dst_iovs, 0, sizeof(dst_iovs));
 
 	/* Check that append fails and no sequence object is allocated when there are no more free
 	 * tasks */
@@ -1000,6 +1011,9 @@ test_sequence_completion_error(void)
 
 	ioch = spdk_accel_get_io_channel();
 	SPDK_CU_ASSERT_FATAL(ioch != NULL);
+
+	memset(&src_iovs, 0, sizeof(src_iovs));
+	memset(&dst_iovs, 0, sizeof(dst_iovs));
 
 	/* Override the submit_tasks function */
 	g_module_if.submit_tasks = ut_sequnce_submit_tasks;
@@ -1156,6 +1170,9 @@ test_sequence_decompress(void)
 	ioch = spdk_accel_get_io_channel();
 	SPDK_CU_ASSERT_FATAL(ioch != NULL);
 
+	memset(src_iovs, 0, sizeof(src_iovs));
+	memset(dst_iovs, 0, sizeof(dst_iovs));
+
 	memset(expected, 0xa5, sizeof(expected));
 	src_iovs[0].iov_base = expected;
 	src_iovs[0].iov_len = sizeof(expected);
@@ -1284,6 +1301,9 @@ test_sequence_reverse(void)
 
 	ioch = spdk_accel_get_io_channel();
 	SPDK_CU_ASSERT_FATAL(ioch != NULL);
+
+	memset(src_iovs, 0, sizeof(src_iovs));
+	memset(dst_iovs, 0, sizeof(dst_iovs));
 
 	memset(expected, 0xa5, sizeof(expected));
 	src_iovs[0].iov_base = expected;
@@ -1468,6 +1488,10 @@ test_sequence_copy_elision(void)
 
 	ioch = spdk_accel_get_io_channel();
 	SPDK_CU_ASSERT_FATAL(ioch != NULL);
+
+	memset(src_iovs, 0, sizeof(src_iovs));
+	memset(dst_iovs, 0, sizeof(dst_iovs));
+	memset(exp_iovs, 0, sizeof(exp_iovs));
 
 	/* Override the submit_tasks function */
 	g_module_if.submit_tasks = ut_sequnce_submit_tasks;
@@ -1902,6 +1926,9 @@ test_sequence_accel_buffers(void)
 
 	ioch = spdk_accel_get_io_channel();
 	SPDK_CU_ASSERT_FATAL(ioch != NULL);
+
+	memset(src_iovs, 0, sizeof(src_iovs));
+	memset(dst_iovs, 0, sizeof(dst_iovs));
 
 	/* Override the submit_tasks function */
 	g_module_if.submit_tasks = ut_sequnce_submit_tasks;
@@ -2349,6 +2376,7 @@ test_sequence_accel_buffers(void)
 static void
 ut_domain_ctx_init(struct ut_domain_ctx *ctx, void *base, size_t len, struct iovec *expected)
 {
+	memset(&ctx->iov, 0, sizeof(ctx->iov));
 	ctx->iov.iov_base = base;
 	ctx->iov.iov_len = len;
 	ctx->expected = *expected;
@@ -2378,6 +2406,9 @@ test_sequence_memory_domain(void)
 
 	ioch = spdk_accel_get_io_channel();
 	SPDK_CU_ASSERT_FATAL(ioch != NULL);
+
+	memset(src_iovs, 0, sizeof(src_iovs));
+	memset(dst_iovs, 0, sizeof(dst_iovs));
 
 	/* Override the submit_tasks function */
 	g_module_if.submit_tasks = ut_sequnce_submit_tasks;
@@ -2765,6 +2796,9 @@ test_sequence_module_memory_domain(void)
 	ioch = spdk_accel_get_io_channel();
 	SPDK_CU_ASSERT_FATAL(ioch != NULL);
 
+	memset(src_iovs, 0, sizeof(src_iovs));
+	memset(dst_iovs, 0, sizeof(dst_iovs));
+
 	/* Override the submit_tasks function */
 	g_module_if.submit_tasks = ut_sequnce_submit_tasks;
 	g_module.supports_memory_domains = true;
@@ -2926,6 +2960,9 @@ test_sequence_crypto(void)
 
 	ioch = spdk_accel_get_io_channel();
 	SPDK_CU_ASSERT_FATAL(ioch != NULL);
+
+	memset(src_iovs, 0, sizeof(src_iovs));
+	memset(dst_iovs, 0, sizeof(dst_iovs));
 
 	rc = spdk_accel_crypto_key_create(&key_params);
 	CU_ASSERT_EQUAL(rc, 0);
