@@ -14,11 +14,11 @@ visudo
 To perform a native build on CheriBSD, the following packages are required:
 
 ~~~{.sh}
-sudo pkg64c install bash git e2fsprogs-libuuid
-sudo pkg64 install meson ninja python llvm llvm-base py39-pip gdb-cheri
-sudo pkg64 install pkgconf gmake cunit openssl e2fsprogs-libuuid ncurses
-sudo pkg64 install py39-pyelftools autoconf automake libtool help2man
-sudo pkg64 install doxygen mscgen graphviz
+sudo pkg64c install -y bash git e2fsprogs-libuuid
+sudo pkg64 install -y meson ninja python llvm llvm-base py39-pip gdb-cheri
+sudo pkg64 install -y pkgconf gmake cunit openssl e2fsprogs-libuuid ncurses
+sudo pkg64 install -y py39-pyelftools autoconf automake libtool help2man
+sudo pkg64 install -y doxygen mscgen graphviz
 pip install pyelftools
 ~~~
 
@@ -29,7 +29,7 @@ The patched SPDK source code can be obtained using:
 git clone https://github.com/spdk-morello/spdk
 cd spdk
 git checkout morello
-git update submodule --init
+git submodule update --init
 ~~~
 
 ## CheriBSD Source Code
@@ -49,8 +49,15 @@ echo 'ZFSTOP=${SYSDIR}/contrib/subrepo-openzfs' | sudo tee -a /usr/share/mk/bsd.
 ~~~
 
 Memory allocated with the contigmem kernel module does not support storing capabilities.
-To work around this, the temporary hack in kernel/freebsd/contigmem/cheribsd.patch can be
-applied and the kernel rebuilt.
+To work around this, the temporary hack in dpdk/kernel/freebsd/contigmem/cheribsd.patch can be
+applied:
+
+~~~{.sh}
+sudo patch -d /usr/src < dpdk/kernel/freebsd/contigmem/cheribsd.patch
+~~~
+
+The kernel can then be rebuilt and installed following the instructions in
+https://github.com/CTSRD-CHERI/cheripedia/wiki/HOWTO:-Build-CheriBSD-natively-on-Morello.
 
 ## Kernel Modules
 
@@ -101,6 +108,13 @@ There is no purecap version of CUnit which is a requirement for unit testing.
 A temporary hacked build can be downloaded from:
 
 https://github.com/spdk-morello/CUnit/releases/download/1.0/CUnit.tgz
+
+This can be installed with:
+
+~~~{.sh}
+curl -L https://github.com/spdk-morello/CUnit/releases/download/1.0/CUnit.tgz --output /tmp/CUnit.tgz
+sudo tar xv -C / -f /tmp/CUnit.tgz 
+~~~
 
 To create a purecap build:
 
