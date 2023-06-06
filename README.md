@@ -2,6 +2,10 @@
 
 The 'morello' branch of this repository contains changes to SPDK release v23.01 to support native builds on the Arm Morello platform running CheriBSD.
 
+This repository is not intended to be a permanent fork. It provides a convenient place to make work in progress visible to the community but the intent is upstream as much as possible.
+
+[rtegrity](https://rtegrity.com/) is leading the ongoing development of the project, as part of the [Digital Security by Design](https://www.dsbd.tech/) Technology Access Programme.
+
 ## Prerequisites
 
 The examples below assume the use of 'sudo' which can be installed and configured as 'root' using:
@@ -185,6 +189,16 @@ A number of hacks have been used in order to move past blocking problems. These 
 SPDK_ARM_MORELLO_HACK
 SPDK_ARM_PURECAP_HACK
 ~~~
+
+## Acknowledgements
+
+[rtegrity](https://rtegrity.com/) has been able to develop this project thanks to the support of the [Digital Security by Design](https://www.dsbd.tech/) Technology Access Programme.
+
+## Core Maintainers
+
+The [core maintainers](https://github.com/spdk-morello/spdk/blob/master/MAINTAINERS.md) primary responsibility is to provide technical oversight for the SPDK-Morello project.
+The current list includes:
+* [Nick Connolly](https://github.com/nconnolly1), [rtegrity](https://rtegrity.com/)
 
 ---
 
