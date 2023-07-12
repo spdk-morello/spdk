@@ -452,10 +452,22 @@ spdk_bdev_part_base_construct_ext(const char *bdev_name,
 				  spdk_bdev_remove_cb_t remove_cb, struct spdk_bdev_module *module,
 				  struct spdk_bdev_fn_table *fn_table, struct bdev_part_tailq *tailq,
 				  spdk_bdev_part_base_free_fn free_fn, void *ctx,
-				  uint32_t channel_size, spdk_io_channel_create_cb ch_create_cb,
+				  uint32_t channel_size,
+#ifdef C18N_ARGS_FIXED
+				  spdk_io_channel_create_cb ch_create_cb,
 				  spdk_io_channel_destroy_cb ch_destroy_cb,
 				  struct spdk_bdev_part_base **_base)
 {
+#else
+				  ...)
+{
+	va_list ap;
+	va_start(ap, channel_size);
+	spdk_io_channel_create_cb ch_create_cb = va_arg(ap, spdk_io_channel_create_cb);
+	spdk_io_channel_destroy_cb ch_destroy_cb = va_arg(ap, spdk_io_channel_destroy_cb);
+	struct spdk_bdev_part_base **_base = va_arg(ap, struct spdk_bdev_part_base **);
+	va_end(ap);
+#endif
 	int rc;
 	struct spdk_bdev_part_base *base;
 

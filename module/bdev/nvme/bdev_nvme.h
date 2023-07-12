@@ -302,7 +302,11 @@ int bdev_nvme_create(struct spdk_nvme_transport_id *trid,
 		     void *cb_ctx,
 		     struct spdk_nvme_ctrlr_opts *drv_opts,
 		     struct nvme_ctrlr_opts *bdev_opts,
+#ifdef C18N_ARGS_FIXED
 		     bool multipath);
+#else
+			 ...);
+#endif
 
 int bdev_nvme_start_discovery(struct spdk_nvme_transport_id *trid, const char *base_name,
 			      struct spdk_nvme_ctrlr_opts *drv_opts, struct nvme_ctrlr_opts *bdev_opts,

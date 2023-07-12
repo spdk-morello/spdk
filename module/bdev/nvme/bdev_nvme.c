@@ -5229,8 +5229,17 @@ bdev_nvme_create(struct spdk_nvme_transport_id *trid,
 		 void *cb_ctx,
 		 struct spdk_nvme_ctrlr_opts *drv_opts,
 		 struct nvme_ctrlr_opts *bdev_opts,
+#ifdef C18N_ARGS_FIXED
 		 bool multipath)
 {
+#else
+		...)
+{
+	va_list ap;
+	va_start(ap, bdev_opts);
+	bool multipath = va_arg(ap, int);
+	va_end(ap);
+#endif
 	struct nvme_probe_skip_entry	*entry, *tmp;
 	struct nvme_async_probe_ctx	*ctx;
 	spdk_nvme_attach_cb attach_cb;

@@ -1327,9 +1327,13 @@ int spdk_bdev_part_base_construct_ext(const char *bdev_name,
 				      spdk_bdev_part_base_free_fn free_fn,
 				      void *ctx,
 				      uint32_t channel_size,
+#ifdef C18N_ARGS_FIXED
 				      spdk_io_channel_create_cb ch_create_cb,
 				      spdk_io_channel_destroy_cb ch_destroy_cb,
 				      struct spdk_bdev_part_base **base);
+#else
+					  ...);
+#endif
 
 /**
  * Create a logical spdk_bdev_part on top of a base.
