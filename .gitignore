@@ -19,6 +19,7 @@
 *.swp
 *.DS_Store
 build/
+build-*/
 ut_coverage/
 tags
 cscope.out
