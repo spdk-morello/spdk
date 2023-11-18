@@ -77,6 +77,7 @@ DPDK_CFLAGS += -I$(ISAL_DIR)
 DPDK_LDFLAGS += -L$(ISAL_DIR)/.libs -lisal
 endif
 
+DPDK_LDFLAGS=-Wl,-Bsymbolic
 DPDK_ENABLED_DRIVERS = $(shell echo $(DPDK_DRIVERS) | sed -E "s/ +/,/g")
 
 # crypto & compress deps

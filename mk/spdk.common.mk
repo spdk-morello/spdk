@@ -372,6 +372,8 @@ LDFLAGS += $(shell $(PKGCONF) --libs libssl11)
 endif
 endif
 
+LDFLAGS=-Wl,-Bsymbolic
+
 ifneq ($(CONFIG_NVME_CUSE)$(CONFIG_FUSE),nn)
 SYS_LIBS += -lfuse3
 endif

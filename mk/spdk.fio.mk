@@ -18,7 +18,7 @@ CFLAGS += -Wno-error
 else ifeq ($(CC_TYPE),clang)
 CFLAGS += -Wno-error
 endif
-LDFLAGS += -shared -rdynamic -Wl,-z,nodelete
+LDFLAGS += -shared -rdynamic -Wl,-z,nodelete -Wl,-Bsymbolic
 
 # By default, clang uses static sanitizer libraries, which means that the executable needs to have
 # them linked in.  Since we don't control how the fio binary is compiled, we need to use the shared
