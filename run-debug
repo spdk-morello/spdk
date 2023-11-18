@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+i=$1
+
+export LD_LIBRARY_PATH=.:/home/nick/spdk/$i/lib:/home/nick/spdk/$i/dpdk/lib:/home/nick/spdk/$i/fio
+export LD_64_LIBRARY_PATH=.:/home/nick/spdk/$i/lib://home/nick/spdk/$i/dpdk/lib:/home/nick/spdk/$i/fio
+export LD_C18N_LIBRARY_PATH=.:/home/nick/spdk/$i/lib:/home/nick/spdk/$i/dpdk/lib:/home/nick/spdk/$i/fio
+
+echo run ./examples/bdev/fio_plugin/example_config.fio
+LD_C18N_PRELOAD=`pwd`/$i/fio/spdk_bdev gdb ./fio2

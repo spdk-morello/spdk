@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+[ -z "$*" ] && set -- build-one* build-multi*
+
+echo
+
+for i in $*
+do
+	export LD_LIBRARY_PATH=.:/home/nick/spdk/$i/lib:/home/nick/spdk/$i/dpdk/lib:/home/nick/spdk/$i/fio
+	export LD_64_LIBRARY_PATH=.:/home/nick/spdk/$i/lib://home/nick/spdk/$i/dpdk/lib:/home/nick/spdk/$i/fio
+	export LD_C18N_LIBRARY_PATH=.:/home/nick/spdk/$i/lib:/home/nick/spdk/$i/dpdk/lib:/home/nick/spdk/$i/fio
+
+	case "$i" in
+	build-onelib)
+		echo -e '\033[1;33m'"SPDK Plugin as single library"'\033[0m'
+		;;
+	build-onelib-debug)
+		echo -e '\033[1;33m'"SPDK Plugin as single library (debug)"'\033[0m'
+		;;
+	build-multilib)
+		echo -e '\033[1;33m'"SPDK Plugin as multiple libraries"'\033[0m'
+		;;
+	build-multilib-debug)
+		echo -e '\033[1;33m'"SPDK Plugin as multiple libraries (debug)"'\033[0m'
+		;;
+	esac
+
+	/bin/echo '    \c'
+	fio ./examples/bdev/fio_plugin/example_config.fio 2>&1 | egrep 'READ:|WRITE:| lat \(usec\):'
+
+	echo
+	echo -e '\033[1;33mC18N\033[0m\c'
+	./fio2 ./examples/bdev/fio_plugin/example_config.fio 2>&1 | egrep 'READ:|WRITE:| lat \(usec\):'
+	[ "$i" = "build-multilib" ] && echo -e '\033[1;31m'" Segmentation fault (call through function pointer)"'\033[0m'
+
+	echo
+done
+ 

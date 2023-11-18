@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+
+if [ ! -f ./fio2 ]
+then
+	cp /usr/local/bin/fio fio2
+	chmod +w fio2
+	if [ -f $HOME/ld-elf-c18n.so.1 ]
+	then patchelf --set-interpreter $HOME/ld-elf-c18n.so.1 ./fio2
+	else patchelf --set-interpreter /libexec/ld-elf-c18n.so.1 ./fio2
+	fi
+	chmod -w fio2
+fi
+
+for i in build-onelib build-onelib-debug build-multilib build-multilib-debug
+do
+	if [ ! -d "$i" ]
+	then
+		rm -rf build dpdk/build
+		case "$i" in
+		build-onelib)
+			./configure --target-arch=morello --with-fio
+			;;
+		build-onelib-debug)
+			./configure --target-arch=morello --with-fio --enable-debug
+			;;
+		build-multilib)
+			./configure --target-arch=morello --with-fio --with-shared
+			;;
+		build-multilib-debug)
+			./configure --target-arch=morello --with-fio --enable-debug --with-shared
+			;;
+		esac
+		
+		gmake -j4
+		mv build $i
+		mv dpdk/build $i/dpdk/
+	fi
+done
+
