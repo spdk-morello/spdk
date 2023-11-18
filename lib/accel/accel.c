@@ -20,6 +20,8 @@
 #include "spdk/util.h"
 #include "spdk/hexlify.h"
 
+int sw_accel_submit_tasks(struct spdk_io_channel *ch, struct spdk_accel_task *accel_task);
+
 /* Accelerator Framework: The following provides a top level
  * generic API for the accelerator functions defined here. Modules,
  * such as the one in /module/accel/ioat, supply the implementation
@@ -297,6 +299,9 @@ spdk_accel_submit_copy(struct spdk_io_channel *ch, void *dst, void *src,
 	accel_task->dst_domain = NULL;
 	accel_task->step_cb_fn = NULL;
 
+	if (module->submit_tasks == sw_accel_submit_tasks)
+		return sw_accel_submit_tasks(module_ch, accel_task);
+
 	return module->submit_tasks(module_ch, accel_task);
 }
 
@@ -339,6 +344,9 @@ spdk_accel_submit_dualcast(struct spdk_io_channel *ch, void *dst1,
 	accel_task->dst_domain = NULL;
 	accel_task->step_cb_fn = NULL;
 
+	if (module->submit_tasks == sw_accel_submit_tasks)
+		return sw_accel_submit_tasks(module_ch, accel_task);
+
 	return module->submit_tasks(module_ch, accel_task);
 }
 
@@ -371,6 +379,9 @@ spdk_accel_submit_compare(struct spdk_io_channel *ch, void *src1,
 	accel_task->dst_domain = NULL;
 	accel_task->step_cb_fn = NULL;
 
+	if (module->submit_tasks == sw_accel_submit_tasks)
+		return sw_accel_submit_tasks(module_ch, accel_task);
+
 	return module->submit_tasks(module_ch, accel_task);
 }
 
@@ -401,6 +412,9 @@ spdk_accel_submit_fill(struct spdk_io_channel *ch, void *dst,
 	accel_task->dst_domain = NULL;
 	accel_task->step_cb_fn = NULL;
 
+	if (module->submit_tasks == sw_accel_submit_tasks)
+		return sw_accel_submit_tasks(module_ch, accel_task);
+
 	return module->submit_tasks(module_ch, accel_task);
 }
 
@@ -430,6 +444,9 @@ spdk_accel_submit_crc32c(struct spdk_io_channel *ch, uint32_t *crc_dst,
 	accel_task->src_domain = NULL;
 	accel_task->dst_domain = NULL;
 	accel_task->step_cb_fn = NULL;
+
+	if (module->submit_tasks == sw_accel_submit_tasks)
+		return sw_accel_submit_tasks(module_ch, accel_task);
 
 	return module->submit_tasks(module_ch, accel_task);
 }
@@ -471,6 +488,9 @@ spdk_accel_submit_crc32cv(struct spdk_io_channel *ch, uint32_t *crc_dst,
 	accel_task->dst_domain = NULL;
 	accel_task->step_cb_fn = NULL;
 
+	if (module->submit_tasks == sw_accel_submit_tasks)
+		return sw_accel_submit_tasks(module_ch, accel_task);
+
 	return module->submit_tasks(module_ch, accel_task);
 }
 
@@ -505,6 +525,9 @@ spdk_accel_submit_copy_crc32c(struct spdk_io_channel *ch, void *dst,
 	accel_task->src_domain = NULL;
 	accel_task->dst_domain = NULL;
 	accel_task->step_cb_fn = NULL;
+
+	if (module->submit_tasks == sw_accel_submit_tasks)
+		return sw_accel_submit_tasks(module_ch, accel_task);
 
 	return module->submit_tasks(module_ch, accel_task);
 }
@@ -558,6 +581,9 @@ spdk_accel_submit_copy_crc32cv(struct spdk_io_channel *ch, void *dst,
 	accel_task->dst_domain = NULL;
 	accel_task->step_cb_fn = NULL;
 
+	if (module->submit_tasks == sw_accel_submit_tasks)
+		return sw_accel_submit_tasks(module_ch, accel_task);
+
 	return module->submit_tasks(module_ch, accel_task);
 }
 
@@ -589,6 +615,9 @@ spdk_accel_submit_compress(struct spdk_io_channel *ch, void *dst, uint64_t nbyte
 	accel_task->dst_domain = NULL;
 	accel_task->step_cb_fn = NULL;
 
+	if (module->submit_tasks == sw_accel_submit_tasks)
+		return sw_accel_submit_tasks(module_ch, accel_task);
+
 	return module->submit_tasks(module_ch, accel_task);
 }
 
@@ -618,6 +647,9 @@ spdk_accel_submit_decompress(struct spdk_io_channel *ch, struct iovec *dst_iovs,
 	accel_task->src_domain = NULL;
 	accel_task->dst_domain = NULL;
 	accel_task->step_cb_fn = NULL;
+
+	if (module->submit_tasks == sw_accel_submit_tasks)
+		return sw_accel_submit_tasks(module_ch, accel_task);
 
 	return module->submit_tasks(module_ch, accel_task);
 }
@@ -653,6 +685,9 @@ spdk_accel_submit_encrypt(struct spdk_io_channel *ch, struct spdk_accel_crypto_k
 	accel_task->flags = flags;
 	accel_task->op_code = ACCEL_OPC_ENCRYPT;
 
+	if (module->submit_tasks == sw_accel_submit_tasks)
+		return sw_accel_submit_tasks(module_ch, accel_task);
+
 	return module->submit_tasks(module_ch, accel_task);
 }
 
@@ -686,6 +721,9 @@ spdk_accel_submit_decrypt(struct spdk_io_channel *ch, struct spdk_accel_crypto_k
 	accel_task->block_size = block_size;
 	accel_task->flags = flags;
 	accel_task->op_code = ACCEL_OPC_DECRYPT;
+
+	if (module->submit_tasks == sw_accel_submit_tasks)
+		return sw_accel_submit_tasks(module_ch, accel_task);
 
 	return module->submit_tasks(module_ch, accel_task);
 }
@@ -1470,6 +1508,10 @@ accel_process_sequence(struct spdk_accel_sequence *seq)
 			module_ch = accel_ch->module_ch[task->op_code];
 
 			accel_sequence_set_state(seq, ACCEL_SEQUENCE_STATE_AWAIT_TASK);
+			
+			if (module->submit_tasks == sw_accel_submit_tasks)
+				rc = sw_accel_submit_tasks(module_ch, task);
+			else
 			rc = module->submit_tasks(module_ch, task);
 			if (spdk_unlikely(rc != 0)) {
 				SPDK_ERRLOG("Failed to submit %s operation, sequence: %p\n",

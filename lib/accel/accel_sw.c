@@ -510,7 +510,7 @@ _sw_accel_decrypt(struct sw_accel_io_channel *sw_ch, struct spdk_accel_task *acc
 	return _sw_accel_crypto_operation(accel_task, key, key_data->decrypt);
 }
 
-static int
+int
 sw_accel_submit_tasks(struct spdk_io_channel *ch, struct spdk_accel_task *accel_task)
 {
 	struct sw_accel_io_channel *sw_ch = spdk_io_channel_get_ctx(ch);
