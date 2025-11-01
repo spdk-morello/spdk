@@ -11,7 +11,8 @@ include $(SPDK_ROOT_DIR)/mk/spdk.common.mk
 
 DPDK_OPTS = -Denable_docs=false
 DPDK_OPTS += -Dtests=false
-DPDK_CFLAGS =
+DPDK_CFLAGS = -mabi=purecap-benchmark
+DPDK_LDFLAGS = -mabi=purecap-benchmark
 
 DPDK_KMODS = false
 ifeq ($(OS),FreeBSD)

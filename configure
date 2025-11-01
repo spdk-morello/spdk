@@ -687,7 +687,7 @@ if [[ $(uname -s) = FreeBSD && -f /usr/include/cheri/cheri.h \
 	&& CONFIG[ARCH] != morello ]]; then
 	BUILD_CMD+=(-I/usr/local64/include -L/usr/local64/lib)
 else
-	BUILD_CMD+=(-I/usr/local/include -L/usr/local/lib)
+	BUILD_CMD+=(-I/usr/local64cb/include -L/usr/local64cb/lib)
 fi
 
 if [[ "${CONFIG[VFIO_USER]}" = "y" ]]; then
