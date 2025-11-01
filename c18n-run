@@ -7,11 +7,17 @@ if [ ! -f ./c18n-run ]
 then
 	exec 0</dev/tty
 	sudo pkg64c install -qy git bash
-	git clone https://github.com/spdk-morello/spdk
-	cd spdk
+	git clone https://github.com/spdk-morello/spdk .
 	git checkout c18n-benchmark
 	exec ./c18n-run
 fi
+
+sudo pkg64 install -qy meson ninja python llvm llvm-base py39-pip gdb-cheri \
+	pkgconf openssl e2fsprogs-libuuid ncurses py39-pyelftools \
+	autoconf automake libtool help2man doxygen mscgen graphviz
+sudo pkg64c install -qy bash git gmake
+sudo pkg64cb install -qy e2fsprogs-libuuid cunit curl
+pip install -q pyelftools
 
 [ -d dpdk/config ] || git submodule update --init
 
@@ -27,13 +33,6 @@ fi
 	( cd dpdkbuild && gmake )
 	gmake -j4
 )
-
-sudo pkg64 install -qy meson ninja python llvm llvm-base py39-pip gdb-cheri \
-	pkgconf openssl e2fsprogs-libuuid ncurses py39-pyelftools \
-	autoconf automake libtool help2man doxygen mscgen graphviz
-sudo pkg64c install -qy bash git gmake
-sudo pkg64cb install -qy e2fsprogs-libuuid cunit curl
-pip install -q pyelftools
 
 SPDK=`pwd`/build
 DPDK=`pwd`/dpdk/build
