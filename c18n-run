@@ -3,6 +3,8 @@
 ABI="-mabi=purecap-benchmark"
 WARN="-Wno-cheri-inefficient -Wno-cheri-capability-misuse -Wno-cheri-provenance"
 
+# curl -s https://raw.githubusercontent.com/spdk-morello/spdk/c18n-benchmark/c18n-run | bash
+
 if [ ! -f ./c18n-run ]
 then
 	exec 0</dev/tty
@@ -12,12 +14,16 @@ then
 	exec ./c18n-run
 fi
 
+# Install package dependencies
+
 sudo pkg64 install -qy meson ninja python llvm llvm-base py39-pip gdb-cheri \
 	pkgconf openssl e2fsprogs-libuuid ncurses py39-pyelftools \
 	autoconf automake libtool help2man doxygen mscgen graphviz
 sudo pkg64c install -qy bash git gmake
 sudo pkg64cb install -qy e2fsprogs-libuuid cunit curl
 pip install -q pyelftools
+
+# Build
 
 [ -d dpdk/config ] || git submodule update --init
 
@@ -33,6 +39,8 @@ pip install -q pyelftools
 	( cd dpdkbuild && gmake )
 	gmake -j4
 )
+
+# Run ramdisk test
 
 SPDK=`pwd`/build
 DPDK=`pwd`/dpdk/build
