@@ -2,6 +2,7 @@
 
 ABI="-mabi=purecap-benchmark"
 WARN="-Wno-cheri-inefficient -Wno-cheri-capability-misuse -Wno-cheri-provenance"
+HACK="-DC18N_NO_COPY_HACK"
 
 # curl -s https://raw.githubusercontent.com/spdk-morello/spdk/c18n-benchmark/c18n-run | bash
 
@@ -32,12 +33,12 @@ sudo pkg64cb install -qy e2fsprogs-libuuid cunit curl
 
 [ -f fio/fio ] || (
 	cd fio;
-	./configure --disable-shm --extra-cflags="$ABI $WARN" \
+	./configure --disable-shm --extra-cflags="$ABI $WARN $HACK" \
 		--extra-ldflags="-mabi=purecap-benchmark" && gmake -j4
 )
 
 [ -d build ] || (
-	CFLAGS="$ABI $WARN" CXXFLAGS="$ABI $WARN" LDFLAGS="$ABI" \
+	CFLAGS="$ABI $WARN $HACK" CXXFLAGS="$ABI $WARN $HACK" LDFLAGS="$ABI" \
 		./configure --target-arch=morello --disable-tests --disable-unit-tests --disable-apps --with-fio=`pwd`/fio --with-shared
 	gmake -j4
 )
