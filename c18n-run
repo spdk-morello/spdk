@@ -16,12 +16,15 @@ fi
 
 # Install package dependencies
 
-sudo pkg64 install -qy meson ninja python llvm llvm-base py39-pip gdb-cheri \
-	pkgconf openssl e2fsprogs-libuuid ncurses py39-pyelftools \
-	autoconf automake libtool help2man doxygen mscgen graphviz
-sudo pkg64c install -qy bash git gmake
 sudo pkg64cb install -qy e2fsprogs-libuuid cunit curl
-pip install -q pyelftools
+
+[ -f fio/fio -a -d build ] || (
+	sudo pkg64 install -qy meson ninja python llvm llvm-base py39-pip gdb-cheri \
+		pkgconf openssl e2fsprogs-libuuid ncurses py39-pyelftools \
+		autoconf automake libtool help2man doxygen mscgen graphviz
+	sudo pkg64c install -qy bash git gmake
+	pip install -q pyelftools
+)
 
 # Build
 
