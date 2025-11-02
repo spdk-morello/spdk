@@ -11,12 +11,12 @@ include $(SPDK_ROOT_DIR)/mk/spdk.common.mk
 
 DPDK_OPTS = -Denable_docs=false
 DPDK_OPTS += -Dtests=false
-DPDK_CFLAGS = -mabi=purecap-benchmark -Wno-cheri-inefficient
+DPDK_CFLAGS = -DC18N_NO_CONTIGMEM_HACK -mabi=purecap-benchmark -Wno-cheri-inefficient
 DPDK_LDFLAGS = -mabi=purecap-benchmark
 
 DPDK_KMODS = false
 ifeq ($(OS),FreeBSD)
-DPDK_KMODS = true
+# DPDK_KMODS = true
 endif
 DPDK_OPTS += -Denable_kmods=$(DPDK_KMODS)
 
@@ -188,8 +188,7 @@ all: $(SPDK_ROOT_DIR)/dpdk/build-tmp
 	# libraries don't get reinstalled when they haven't been rebuilt - this avoids all of \
 	# our applications getting relinked even when nothing has changed.
 	$(Q)if [ "$(OS)" = "FreeBSD" ]; then \
-		env -u MAKEFLAGS DESTDIR=$(SPDK_ROOT_DIR)/dpdk/build ninja -C $(SPDK_ROOT_DIR)/dpdk/build-tmp $(MAKE_NUMJOBS) install > /dev/null && \
-		mv $(SPDK_ROOT_DIR)/dpdk/build/boot/modules $(SPDK_ROOT_DIR)/dpdk/build/kmod; \
+		env -u MAKEFLAGS DESTDIR=$(SPDK_ROOT_DIR)/dpdk/build ninja -C $(SPDK_ROOT_DIR)/dpdk/build-tmp $(MAKE_NUMJOBS) install > /dev/null; \
 	else \
 		env -u MAKEFLAGS meson install -C $(SPDK_ROOT_DIR)/dpdk/build-tmp --only-changed > /dev/null; \
 	fi

@@ -36,7 +36,6 @@ pip install -q pyelftools
 [ -d build ] || (
 	CFLAGS="$ABI $WARN" CXXFLAGS="$ABI $WARN" LDFLAGS="$ABI" \
 		./configure --target-arch=morello --disable-tests --disable-unit-tests --disable-apps --with-fio=`pwd`/fio --with-shared
-	( cd dpdkbuild && gmake )
 	gmake -j4
 )
 
@@ -45,17 +44,14 @@ pip install -q pyelftools
 SPDK=`pwd`/build
 DPDK=`pwd`/dpdk/build
 
-sudo kldload -n ${DPDK}/kmod/contigmem.ko
-
 echo 'Running with C18N disabled'
-sudo LD_64CB_LIBRARY_PATH=.:/usr/local64cb/lib:${SPDK}/lib:${SPDK}/fio:${DPDK}/lib \
+LD_64CB_LIBRARY_PATH=.:/usr/local64cb/lib:${SPDK}/lib:${SPDK}/fio:${DPDK}/lib \
 	proccontrol -m cheric18n -s disable \
 	./fio/fio ./examples/bdev/fio_plugin/example_config.fio 2>&1 | \
 	egrep 'READ:|WRITE:|fail|FATAL| lat \(usec\):'
 
 echo 'Running with C18N enabled'
-sudo LD_64CB_LIBRARY_PATH=.:/usr/local64cb/lib:${SPDK}/lib:${SPDK}/fio:${DPDK}/lib \
+LD_64CB_LIBRARY_PATH=.:/usr/local64cb/lib:${SPDK}/lib:${SPDK}/fio:${DPDK}/lib \
 	proccontrol -m cheric18n -s enable ./fio/fio ./examples/bdev/fio_plugin/example_config.fio 2>&1 | \
 	egrep 'READ:|WRITE:|fail|FATAL| lat \(usec\):'
 
-sudo kldunload contigmem
