@@ -33,6 +33,10 @@ struct malloc_channel {
 	TAILQ_HEAD(, malloc_task)	completed_tasks;
 };
 
+#ifdef C18N_NO_COPY_HACK
+static int c18n_no_copy_hack;
+#endif
+
 static int
 malloc_verify_pi(struct spdk_bdev_io *bdev_io)
 {
@@ -219,7 +223,7 @@ bdev_malloc_readv(struct malloc_disk *mdisk, struct spdk_io_channel *ch,
 		task->num_outstanding++;
 		res = spdk_accel_submit_copy(ch, iov[i].iov_base,
 #ifdef C18N_NO_COPY_HACK
-			src, 1, 0, malloc_done, task);
+			src, c18n_no_copy_hack ? 1 : iov[i].iov_len, 0, malloc_done, task);
 #else
 			src, iov[i].iov_len, 0, malloc_done, task);
 #endif
@@ -280,7 +284,7 @@ bdev_malloc_writev(struct malloc_disk *mdisk, struct spdk_io_channel *ch,
 		task->num_outstanding++;
 		res = spdk_accel_submit_copy(ch, dst, iov[i].iov_base,
 #ifdef C18N_NO_COPY_HACK
-					     1, 0, malloc_done, task);
+					     c18n_no_copy_hack ? 1 : iov[i].iov_len, 0, malloc_done, task);
 #else
 					     iov[i].iov_len, 0, malloc_done, task);
 #endif
@@ -789,6 +793,9 @@ bdev_malloc_initialize(void)
 	 * Otherwise after enough devices or reinitializations the value gets too high.
 	 * TODO: Make malloc bdev name mandatory and remove this counter. */
 	malloc_disk_count = 0;
+#ifdef C18N_NO_COPY_HACK
+	c18n_no_copy_hack = (getenv("C18N_NO_COPY_HACK") != NULL);
+#endif
 
 	spdk_io_device_register(&g_malloc_disks, malloc_create_channel_cb,
 				malloc_destroy_channel_cb, sizeof(struct malloc_channel),
