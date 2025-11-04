@@ -58,9 +58,9 @@ run_fio () {
 	export LD_64CB_LIBRARY_PATH=.:/usr/local64cb/lib:`pwd`/build/lib:`pwd`/build/fio:`pwd`/dpdk/build/lib
 
 	proccontrol -m cheric18n -s disable ./fio/fio ./build/spdk.fio 2>&1 | \
-		egrep 'read:|fail|FATAL' | sed -e"s/read/$1\t\t/"
+		egrep 'read:|fail|FATAL' | sed -e"s/read/$1\t\t/" -e's/(.*)//'
 	proccontrol -m cheric18n -s enable ./fio/fio ./build/spdk.fio 2>&1 | \
-		egrep 'read:|fail|FATAL' | sed -e"s/read/$1 c18n\t/"
+		egrep 'read:|fail|FATAL' | sed -e"s/read/$1 c18n\t/" -e's/(.*)//'
 
 	rm -f ./build/spdk.fio
 )
