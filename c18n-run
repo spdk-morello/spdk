@@ -43,19 +43,29 @@ sudo pkg64cb install -qy e2fsprogs-libuuid cunit curl
 	gmake -j4
 )
 
-# Run ramdisk test
+# Run ramdisk tests
 
-SPDK=`pwd`/build
-DPDK=`pwd`/dpdk/build
+run_fio () {
+(
+	if [ "$1" = "1" ]
+	then
+		sed -e"s/^bs=.*/bs=512/" < ./examples/bdev/fio_plugin/example_config.fio > ./build/spdk.fio
+		export C18N_NO_COPY_HACK=1
+	else
+		sed -e"s/^bs=.*/bs=$1/" < ./examples/bdev/fio_plugin/example_config.fio > ./build/spdk.fio
+	fi
 
-echo 'Running with C18N disabled'
-LD_64CB_LIBRARY_PATH=.:/usr/local64cb/lib:${SPDK}/lib:${SPDK}/fio:${DPDK}/lib \
-	proccontrol -m cheric18n -s disable \
-	./fio/fio ./examples/bdev/fio_plugin/example_config.fio 2>&1 | \
-	egrep 'READ:|WRITE:|fail|FATAL| lat \(usec\):'
+	export LD_64CB_LIBRARY_PATH=.:/usr/local64cb/lib:`pwd`/build/lib:`pwd`/build/fio:`pwd`/dpdk/build/lib
 
-echo 'Running with C18N enabled'
-LD_64CB_LIBRARY_PATH=.:/usr/local64cb/lib:${SPDK}/lib:${SPDK}/fio:${DPDK}/lib \
-	proccontrol -m cheric18n -s enable ./fio/fio ./examples/bdev/fio_plugin/example_config.fio 2>&1 | \
-	egrep 'READ:|WRITE:|fail|FATAL| lat \(usec\):'
+	proccontrol -m cheric18n -s disable ./fio/fio ./build/spdk.fio 2>&1 | \
+		egrep 'read:|fail|FATAL' | sed -e"s/read/$1\t\t/"
+	proccontrol -m cheric18n -s enable ./fio/fio ./build/spdk.fio 2>&1 | \
+		egrep 'read:|fail|FATAL' | sed -e"s/read/$1 c18n\t/"
 
+	rm -f ./build/spdk.fio
+)
+}
+
+for i in 1 512 4k 8k 16k 32k 64k 128k 256k
+do run_fio $i
+done
